@@ -1,0 +1,54 @@
+# 可选，将显示在 GitHub 存储库的“操作”选项卡中的工作流名称
+name: Test Build CI
+
+# 指定此工作流的触发器
+on:
+  push:
+    # 匹配特定标签 (refs/tags)
+    tags:
+      - "t*" # 推送事件匹配 v*, 例如 v1.0，v20.15.10 等来触发工作流
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: "platform"
+        required: true
+        default: "macos-latest"
+        type: choice
+        options:
+          - macos-latest
+          - windows-latest
+          - ubuntu-latest
+
+# 需要运行的作业组合
+jobs:
+  # 编译 Tauri
+  build-tauri:
+    runs-on: ${{ inputs.platform }}
+    steps:
+      - uses: actions/checkout@v3
+
+      # 安装 Node.js
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 7
+          run_install: false
+
+      # ubuntu-latest webkit2gtk-4.0相关依赖
+      - name: Install dependencies (ubuntu only)
+        if: matrix.platform == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
+
+      # 安装依赖执行构建，以及推送 github release
+      - name: Install app dependencies and build it
+        run: pnpm i && pnpm build
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
