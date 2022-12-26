@@ -10,7 +10,7 @@
 ### 功能演示
 
 <p align="center">
-  <video src="./video.mp4" />
+https://user-images.githubusercontent.com/33005087/209518939-a7aedf55-fcb4-4213-aa9f-4fbf73ad4191.mp4
 </p>
 
 ### TODO
