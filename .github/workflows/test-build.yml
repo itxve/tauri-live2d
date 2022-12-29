@@ -14,14 +14,20 @@ on:
           - macos-latest
           - windows-latest
           - ubuntu-latest
+      ref:
+        description: "branch"
+        required: true
+        default: "dev"
 
 # 需要运行的作业组合
 jobs:
   # 编译 Tauri
   build-tauri:
-    runs-on: ${{ inputs.platform|| }}
+    runs-on: ${{ inputs.platform}}
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{inputs.ref}}
 
       # 安装 Node.js
       - name: Setup node
