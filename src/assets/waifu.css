@@ -1,10 +1,10 @@
 .waifu {
     position: fixed;
     bottom: 0;
-    z-index: 1;
+    z-index: 1000;
     font-size: 0;
-    -webkit-transform: translateY(3px);
-    transform: translateY(3px);
+    /* -webkit-transform: translateY(3px); */
+    /* transform: translateY(3px); */
 }
 .waifu:hover {
     -webkit-transform: translateY(0);
@@ -288,3 +288,28 @@
 .fui-user:before {
   content: "\e631";
 }
+.fui-window:before {
+    content: "\e62f";
+}
+.fui-lock:before {
+content: "\e633";
+}
+.fui-gear:before {
+content: "\e636";
+}
+
+.fui-triangle-up:before {
+content: "\e600";
+}
+.fui-triangle-down:before {
+ content: "\e601";
+}
+
+.fui-power:before {
+ content: "\e634";
+}
+.fui-location:before{
+ content: "\e627"
+}
+
+    

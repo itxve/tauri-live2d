@@ -14,22 +14,32 @@ export { JY_FILE_NAME, APP_CONFIG_FILE_NAME };
 
 import { RustCallResult } from "@/types";
 
+export interface AppConfig {
+  serve_path?: string;
+  width?: number;
+  height?: number;
+  x?: number;
+  y?: number;
+  remote_list?: string[];
+  [key: string]: any;
+}
+
 /**
  *读取配置文件
  * @returns
  */
-export async function readConfig() {
+export async function readConfig(): Promise<AppConfig> {
   if (!(await exists(APP_CONFIG_FILE_NAME, { dir: BaseDirectory.AppConfig }))) {
-    return {};
+    return {} as AppConfig;
   }
   const config = await readTextFile(APP_CONFIG_FILE_NAME, {
     dir: BaseDirectory.AppConfig,
   });
   try {
-    return JSON.parse(config);
+    return JSON.parse(config) as AppConfig;
   } catch (error) {
     writeConfig("");
-    return {};
+    return {} as AppConfig;
   }
 }
 

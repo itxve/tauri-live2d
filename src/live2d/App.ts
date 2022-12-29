@@ -4,6 +4,7 @@ import Live2dApp from "./index.vue";
 declare global {
   interface Window {
     live2d_settings: any;
+    PIXI: any;
   }
 }
 

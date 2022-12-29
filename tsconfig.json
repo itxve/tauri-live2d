@@ -8,10 +8,11 @@
     "jsx": "preserve",
     "noImplicitAny": false,
     "sourceMap": true,
+    "allowJs": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "lib": ["ESNext", "DOM"],
+    "lib": ["ESNext", "DOM", "es2015"],
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {

@@ -8,7 +8,13 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Live2dConfig: typeof import('./src/components/Live2dConfig.vue')['default']
+    Models: typeof import('./src/components/Models.vue')['default']
+    NButton: typeof import('naive-ui')['NButton']
+    NCard: typeof import('naive-ui')['NCard']
     NFormItem: typeof import('naive-ui')['NFormItem']
     NSpace: typeof import('naive-ui')['NSpace']
+    NTable: typeof import('naive-ui')['NTable']
+    NTabPane: typeof import('naive-ui')['NTabPane']
+    NTabs: typeof import('naive-ui')['NTabs']
   }
 }

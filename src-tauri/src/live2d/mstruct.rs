@@ -17,3 +17,8 @@ pub enum InitType {
     CreateError,
     SUCCESS,
 }
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ConfigFile {
+    pub serve_path: Option<String>,
+}

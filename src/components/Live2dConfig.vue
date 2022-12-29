@@ -1,15 +1,22 @@
 <script setup lang="ts">
-import { modelConfig } from "@/hooks/useModel";
-import { JY_FILE_NAME, readConfig, writeConfig } from "@/util";
-import { RustCallResult } from "@/types";
+import { readConfig, writeConfig } from "@/util";
 import { enable, disable } from "@/plugins";
 import {
   WebviewWindow,
   PhysicalPosition,
   appWindow,
 } from "@tauri-apps/api/window";
-import { NButton, NForm, NInput, NSwitch } from "naive-ui";
+import {
+  NButton,
+  NForm,
+  NSwitch,
+  NTabPane,
+  NFormItem,
+  NSpace,
+  NTabs,
+} from "naive-ui";
 import { onMounted, ref } from "vue";
+import Models from "./Models.vue";
 
 const autoStartRef = ref(false);
 
@@ -17,17 +24,6 @@ async function Close() {
   const live2d = WebviewWindow.getByLabel("main");
   if (live2d) {
     await live2d.close();
-  }
-}
-
-async function save() {
-  if (modelConfig.value) {
-    const config = await readConfig();
-    config.api = modelConfig.value;
-    await writeConfig(JSON.stringify(config));
-    alert(modelConfig.value);
-    await Close();
-    await OpenNew();
   }
 }
 
@@ -42,8 +38,8 @@ async function OpenNew() {
   const config = await readConfig();
   const x = config.x || 100;
   const y = config.y || 120;
-  const width = config.width || 280;
-  const height = config.height || 300;
+  const width = config.width || 215;
+  const height = config.height || 200;
 
   const webview = new WebviewWindow("main", {
     url: "/live2d.html",
@@ -83,61 +79,65 @@ async function switchAutoStart(e: boolean) {
   config.auto_start = e;
   await writeConfig(JSON.stringify(config));
 }
-onMounted(async () => {
-  const config = await readConfig();
-  autoStartRef.value = config.auto_start || false;
-  modelConfig.value = config.api || "https://live2d.fghrsh.net/api/";
+
+const tabRef = ref();
+
+async function beforeLeave(name: string, oldName: string) {
+  console.log("s,", name, oldName);
+  localStorage.setItem("tab_switch", name);
+  tabRef.value = name;
+  return true;
+}
+
+onMounted(() => {
+  tabRef.value = localStorage.getItem("tab_switch") || "config";
 });
 </script>
 
 <template>
   <div class="card">
-    <n-form
-      ref="formRef"
-      label-placement="left"
-      label-width="120px"
-      require-mark-placement="right-hanging"
+    <n-tabs
+      type="card"
+      animated
+      @before-leave="beforeLeave"
+      v-model:value="tabRef"
     >
-      <!-- <span>
-        https://live2d.fghrsh.net/api/
-        <br />
-        https://api.zsq.im/live2d/
-      </span> -->
-      <n-form-item label="模型API地址">
-        <n-space>
-          <n-input style="width: 300px" v-model:value="modelConfig" />
-          <n-button type="success" @click="save">保存</n-button>
-        </n-space>
-      </n-form-item>
-      <n-form-item label="开机启动">
-        <n-switch
-          @update-value="switchAutoStart"
-          v-model:value="autoStartRef"
-          size="medium"
+      <n-tab-pane name="config" tab="配置">
+        <n-form
+          ref="formRef"
+          label-placement="left"
+          label-width="120px"
+          require-mark-placement="right-hanging"
         >
-          <template #icon> 🌈 </template>
-        </n-switch>
-      </n-form-item>
-      <!-- <n-form-item label="一言API">
-        <n-select
-          @update-value="switchAutoStart"
-          v-model:value="autoStartRef"
-          size="medium"
-        >
-         
-        </n-select>
-      </n-form-item> -->
-      <n-form-item label="live2d操作">
-        <n-space>
-          <n-button type="info" tertiary @click="OpenNew"> 打开桌宠 </n-button>
-          <n-button type="info" tertiary @click="Close()"> 关闭桌宠 </n-button>
-          <n-button type="info" tertiary @click="reset()"> 重置位置 </n-button>
-          <n-button type="info" tertiary @click="enableMouse()">
-            开启捕获鼠标事件
-          </n-button>
-        </n-space>
-      </n-form-item>
-    </n-form>
+          <n-form-item label="开机启动">
+            <n-switch
+              @update-value="switchAutoStart"
+              v-model:value="autoStartRef"
+              size="medium"
+            >
+              <template #icon> 🌈 </template>
+            </n-switch>
+          </n-form-item>
+          <n-form-item label="live2d操作">
+            <n-space>
+              <n-button type="info" tertiary @click="OpenNew">
+                打开桌宠
+              </n-button>
+              <n-button type="info" tertiary @click="Close()">
+                关闭桌宠
+              </n-button>
+              <n-button type="info" tertiary @click="reset()">
+                重置位置
+              </n-button>
+              <n-button type="info" tertiary @click="enableMouse()">
+                开启捕获鼠标事件
+              </n-button>
+            </n-space>
+          </n-form-item>
+        </n-form>
+      </n-tab-pane>
+      <n-tab-pane name="live2d" tab="live2d模型"> <Models /> </n-tab-pane>
+    </n-tabs>
   </div>
 </template>
 
