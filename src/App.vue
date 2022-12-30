@@ -2,7 +2,7 @@
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import Live2dConfig from "./components/Live2dConfig.vue";
-import { repo, version } from "../package.json";
+import { repository, version } from "../package.json";
 </script>
 
 <template>
@@ -11,7 +11,7 @@ import { repo, version } from "../package.json";
     <footer class="footer">
       <div>
         © 2022
-        <a target="_blank" :href="repo">
+        <a target="_blank" :href="repository">
           <b>GitHub</b>
         </a>
         V{{ version }}

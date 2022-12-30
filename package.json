@@ -1,9 +1,9 @@
 {
   "name": "my-tauri-app",
   "private": true,
-  "version": "3.0.2",
+  "version": "3.0.1",
   "type": "module",
-  "repo": "https://github.com/itxve/tauri-live2d",
+  "repository": "https://github.com/itxve/tauri-live2d",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
