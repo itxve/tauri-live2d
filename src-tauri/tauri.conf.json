@@ -15,7 +15,8 @@
       "all": true,
       "http": {
         "scope": [
-          "http://*/*"
+          "http://*/*",
+          "https://*/*"
         ]
       },
       "fs": {
