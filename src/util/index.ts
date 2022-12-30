@@ -21,6 +21,7 @@ export interface AppConfig {
   x?: number;
   y?: number;
   remote_list?: string[];
+  model_block?: boolean;
   [key: string]: any;
 }
 

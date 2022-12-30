@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { readConfig, writeConfig } from "@/util";
-import { enable, disable } from "@/plugins";
+import { enable, disable, isEnabled } from "@/plugins";
 import {
   WebviewWindow,
   PhysicalPosition,
@@ -19,6 +19,7 @@ import { onMounted, ref } from "vue";
 import Models from "./Models.vue";
 
 const autoStartRef = ref(false);
+const tabRef = ref();
 
 async function Close() {
   const live2d = WebviewWindow.getByLabel("main");
@@ -34,13 +35,17 @@ async function reset() {
   await writeConfig(JSON.stringify(config));
 }
 
-async function OpenNew() {
+async function openNew() {
+  const mainview = WebviewWindow.getByLabel("main");
+  if (mainview) {
+    await mainview.show();
+    return;
+  }
   const config = await readConfig();
   const x = config.x || 100;
   const y = config.y || 120;
   const width = config.width || 215;
   const height = config.height || 200;
-
   const webview = new WebviewWindow("main", {
     url: "/live2d.html",
     transparent: true,
@@ -80,17 +85,15 @@ async function switchAutoStart(e: boolean) {
   await writeConfig(JSON.stringify(config));
 }
 
-const tabRef = ref();
-
 async function beforeLeave(name: string, oldName: string) {
-  console.log("s,", name, oldName);
   localStorage.setItem("tab_switch", name);
   tabRef.value = name;
   return true;
 }
 
-onMounted(() => {
+onMounted(async () => {
   tabRef.value = localStorage.getItem("tab_switch") || "config";
+  autoStartRef.value = await isEnabled();
 });
 </script>
 
@@ -120,7 +123,7 @@ onMounted(() => {
           </n-form-item>
           <n-form-item label="live2d操作">
             <n-space>
-              <n-button type="info" tertiary @click="OpenNew">
+              <n-button type="info" tertiary @click="openNew()">
                 打开桌宠
               </n-button>
               <n-button type="info" tertiary @click="Close()">

@@ -24,8 +24,11 @@ const buttonModeRef = ref(false);
 const canvasRef = ref<HTMLCanvasElement>();
 const modelRef = ref<Live2DModel<InternalModel>>();
 const modelUrlRef = ref();
+const modelBlockRef = ref(false);
+const appRef = ref<PIXI.Application>();
+const blockForeGroundRef = ref<PIXI.Sprite>();
 
-useListenEvent("loadOrtherModel", async ({ windowLabel, payload }) => {
+useListenEvent("load-model", async ({ windowLabel, payload }) => {
   if (windowLabel == "config" && payload) {
     modelUrlRef.value = payload;
     await loadModel(payload);
@@ -33,6 +36,37 @@ useListenEvent("loadOrtherModel", async ({ windowLabel, payload }) => {
   }
 });
 
+useListenEvent("refresh-model", async ({ windowLabel }) => {
+  if (windowLabel == "config") {
+    await getModelUrl();
+    await loadModel(modelUrlRef.value);
+    await reloadPositionScale();
+  }
+});
+/**
+ * 初始化
+ */
+async function init() {
+  const app = new PIXI.Application({
+    view: document.getElementById("live2d") as HTMLCanvasElement,
+    resizeTo: window,
+    backgroundAlpha: 0,
+  });
+  appRef.value = app;
+  if (localStorage.getItem("murl")) {
+    modelUrlRef.value = localStorage.getItem("murl");
+  } else {
+    await getModelUrl();
+  }
+  await loadModel(modelUrlRef.value);
+  await reloadPositionScale();
+  await loadModelBlockState();
+  canvasRef.value?.setAttribute("data-tauri-drag-region", "true");
+}
+
+/**
+ * 一些监听事件
+ */
 onMounted(async () => {
   const config = await readConfig();
   const live2dwebview = WebviewWindow.getByLabel("main");
@@ -41,11 +75,9 @@ onMounted(async () => {
   live2dwebview?.setPosition(
     new PhysicalPosition(config.x!, config.y!).toLogical(factor)
   );
-
   live2dwebview?.setSize(
     new PhysicalSize(config.width!, config.height!).toLogical(factor)
   );
-
   onFocusRef.value = await live2dwebview?.onFocusChanged(
     async ({ payload }) => {
       if (!payload) {
@@ -81,10 +113,15 @@ onMounted(async () => {
       await writeConfig(JSON.stringify(config));
     }, 100)
   );
+
+  await init();
 });
-// 组合写法
+/**
+ * 缩放按键 在可移动模型下生效
+ * @param event
+ */
 async function keydownEvent(event) {
-  // 当然还要组织浏览器的默认事件
+  // 浏览器的默认事件
   event.preventDefault();
   var key = event.keyCode || event.which;
   var shiftKey = event.shiftKey || event.metaKey;
@@ -119,7 +156,9 @@ function on_keydownEvent() {
 function off_keydownEvent() {
   document.removeEventListener("keydown", keydownEvent);
 }
-
+/**
+ * 卸载监听器
+ */
 onUnmounted(() => {
   if (onMoveRef.value) {
     onMoveRef.value();
@@ -154,14 +193,13 @@ async function openConfigWin() {
     url: "/index.html",
     center: true,
     resizable: true,
-    title: "live2d看板娘配置",
+    title: "配置",
+    alwaysOnTop: true,
   });
   const factor = await appWindow.scaleFactor();
   webview.setPosition(new PhysicalPosition(x, y).toLogical(factor));
   webview.once("tauri://sucess", function (e) {});
-  webview.once("tauri://error", function (e) {
-    webview.show();
-  });
+  webview.once("tauri://error", function (e) {});
 }
 /**
  * 开启大小调整
@@ -173,31 +211,17 @@ async function resizeStart() {
   isResizeRef.value = isResizable;
 }
 async function ignoreCursorEvents() {
-  const live2dwebview = WebviewWindow.getByLabel("main");
-  live2dwebview?.setIgnoreCursorEvents(true);
-  alert("鼠标事件穿透开启");
+  const ok = await confirm("确认开启鼠标事件穿透吗？");
+  if (ok) {
+    const live2dwebview = WebviewWindow.getByLabel("main");
+    live2dwebview?.setIgnoreCursorEvents(true);
+    alert("鼠标事件穿透开启");
+  }
 }
 
-const appRef = ref<PIXI.Application>();
-onMounted(async () => {
-  const app = new PIXI.Application({
-    view: document.getElementById("live2d") as HTMLCanvasElement,
-    resizeTo: window,
-    // backgroundColor: 0x333333,
-    backgroundAlpha: 0,
-  });
-  appRef.value = app;
-
-  if (localStorage.getItem("murl")) {
-    modelUrlRef.value = localStorage.getItem("murl");
-  } else {
-    await getModelUrl();
-  }
-  await loadModel(modelUrlRef.value);
-  await reloadPositionScale();
-  canvasRef.value?.setAttribute("data-tauri-drag-region", "true");
-});
-
+/**
+ * 还原模型的位置和缩放
+ */
 async function reloadPositionScale() {
   const config = await readConfig();
   // 还原位置
@@ -212,15 +236,24 @@ async function reloadPositionScale() {
   }
 }
 
+/**
+ * 获取一个模型的url
+ */
 async function getModelUrl() {
   let arr = await model_list();
   const modelUrl = arr[Math.floor(Math.random() * arr.length)];
-  modelUrlRef.value = modelUrl.url;
+  modelUrlRef.value =
+    modelUrl?.url ||
+    "https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/shizuku/shizuku.model.json";
 }
 
+/**
+ * 加载模型
+ * @param uri 模型url
+ */
 async function loadModel(uri) {
   if (modelRef.value) {
-    await appRef.value?.stage.removeChild(modelRef.value);
+    await modelRef.value.destroy();
   }
   const model = await Live2DModel.from(uri);
   appRef.value?.stage.addChild(model);
@@ -241,6 +274,7 @@ async function loadModel(uri) {
     }
   });
   localStorage.setItem("murl", uri);
+  tryAddFrame();
 }
 
 function draggable(model) {
@@ -279,7 +313,7 @@ function offdraggable(model) {
 }
 
 /**
- * 更换模型
+ * 更换模型 mode:随机
  */
 async function nextModel() {
   await getModelUrl();
@@ -303,12 +337,61 @@ async function positionMove(model) {
     off_keydownEvent();
   }
 }
+
+async function tryAddFrame() {
+  if (blockForeGroundRef.value) {
+    await blockForeGroundRef.value.destroy();
+  }
+  const mianview = WebviewWindow.getByLabel("main");
+  const innerSize = await mianview?.innerSize();
+  const foreground = PIXI.Sprite.from(PIXI.Texture.WHITE);
+  foreground.width = innerSize?.width!;
+  foreground.height = innerSize?.height!;
+  foreground.alpha = 0;
+  blockForeGroundRef.value = foreground;
+  appRef.value?.stage.addChild(foreground);
+}
+
+/**
+ * 显示背景块
+ */
+async function changeModelBlock() {
+  modelBlockRef.value = !modelBlockRef.value;
+  if (modelBlockRef.value) {
+    if (blockForeGroundRef.value) {
+      blockForeGroundRef.value.alpha = 0.2;
+    }
+  } else {
+    if (blockForeGroundRef.value) {
+      blockForeGroundRef.value.alpha = 0;
+    }
+  }
+  const config = await readConfig();
+  config.model_block = modelBlockRef.value;
+  await writeConfig(JSON.stringify(config));
+}
+/**
+ * 初始化背景块
+ */
+async function loadModelBlockState() {
+  const config = await readConfig();
+  modelBlockRef.value = config.model_block === false ? false : true;
+  if (modelBlockRef.value) {
+    if (blockForeGroundRef.value) {
+      blockForeGroundRef.value.alpha = 0.2;
+    }
+  } else {
+    if (blockForeGroundRef.value) {
+      blockForeGroundRef.value.alpha = 0;
+    }
+  }
+}
 </script>
 
 <template>
   <div
-    :width="winSize.width - 32 + 'px'"
-    :height="winSize.height - 40 + 'px'"
+    :width="winSize.width"
+    :height="winSize.height"
     :class="{ 'live2d-view': true, edit: isResizeRef }"
   >
     <div class="waifu">
@@ -322,12 +405,20 @@ async function positionMove(model) {
 
       <div class="waifu-tool">
         <span class="fui-gear" @click="openConfigWin"></span>
+        <span
+          :class="{
+            'fui-checkbox-unchecked': true,
+            block: modelBlockRef,
+          }"
+          @click="changeModelBlock"
+        >
+        </span>
         <!-- <span class="fui-chat"></span> -->
         <span class="fui-eye" @click="nextModel"></span>
         <span
           class="fui-location"
           :style="{
-            color: buttonModeRef ? 'green' : '',
+            color: buttonModeRef ? '#117be6' : '',
           }"
           @click="positionMove(modelRef)"
         ></span>
@@ -359,6 +450,10 @@ async function positionMove(model) {
 }
 .waifu-tool {
   margin: 0;
+  top: 20px;
+}
+.block {
+  color: #117be6;
 }
 
 .waifu-tool span {

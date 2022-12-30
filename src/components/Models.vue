@@ -87,8 +87,8 @@ async function addRemote() {
 
 async function loadModel(path: string) {
   const patt =
-    path.indexOf("http") != -1 ? path : `http://localhost:3004${path}`;
-  await emit("loadOrtherModel", patt);
+    path.indexOf("http") != -1 ? path : `http://localhost:13004${path}`;
+  await emit("load-model", patt);
 }
 async function fileSelect() {
   const selected = await dialog.open({
@@ -99,9 +99,14 @@ async function fileSelect() {
 
   if (selected) {
     const config = await readConfig();
+    const serve_path = config.serve_path;
     config.serve_path = selected as string;
     servePathRef.value = selected;
     await writeConfig(JSON.stringify(config));
+    if (!serve_path) {
+      await emit("refresh-model", "");
+      window.location.reload();
+    }
   }
 }
 

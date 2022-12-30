@@ -64,7 +64,7 @@ pub async fn _serve(serve_dir: &str) {
     }
 
     println!("app router:{:?}", &app);
-    axum_server::bind(SocketAddr::from(([127, 0, 0, 1], 3004)))
+    axum_server::bind(SocketAddr::from(([127, 0, 0, 1], 13004)))
         .handle(handle)
         .serve(
             app.layer(
@@ -102,7 +102,7 @@ async fn shutdown_cmd() -> Result<u16> {
     let client = ClientBuilder::new().build().unwrap();
     let response = client
         .send(
-            HttpRequestBuilder::new("GET", "http://127.0.0.1:3004/shutdown")
+            HttpRequestBuilder::new("GET", "http://127.0.0.1:13004/shutdown")
                 .unwrap()
                 .response_type(ResponseType::Binary),
         )
@@ -121,7 +121,7 @@ async fn server_running() -> Result<u16> {
     let client = ClientBuilder::new().build().unwrap();
     let response = client
         .send(
-            HttpRequestBuilder::new("GET", "http://127.0.0.1:3004/running")
+            HttpRequestBuilder::new("GET", "http://127.0.0.1:13004/running")
                 .unwrap()
                 .response_type(ResponseType::Binary),
         )

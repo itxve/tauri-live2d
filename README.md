@@ -15,19 +15,26 @@
 
 ### TODO
 
-- 自建 模型 API 使用[已实现]
 - 大小缩放[已实现] 问题挺多
 - 开机自启动[已实现]
-- 使用 PixiJS 加载任意[2，3，4 版本的]模型[已实现]
-- 使用本地模型[已实现]
+- 使用 PixiJS 加载[v2,v3 版本的]模型[已实现]
+- 使用本地模型、远程模型的加载[已实现]
 
 ### 已知问题
 
-- mac 下出现窗口虚线，暂不知原因
+- mac 下出现窗口虚线，暂不知原因,可能是透明背景下的问题
+
+### 文件下载安装 使用 ghproxy 下载
+
+- `自动更新可能无效，请使用手动下载`
+
+- [最新版本](https://github.com/itxve/tauri-live2d/releases/latest)
+
+- 下载慢可使用[ghproxy](https://ghproxy.com/) 加速
 
 ###
 
-说实话代码有点乱,不想动了
+代码有点乱,但是不想动了
 
 ### 鸣谢
 
@@ -36,6 +43,8 @@
     <img width="32" style="border-radius: 10px;" height="32" src='https://avatars.githubusercontent.com/u/16164244?v=4' />
   </a>
 </p>
+
+[Flat-UI](https://designmodo.github.io/Flat-UI)
 
 # 免责声明
 

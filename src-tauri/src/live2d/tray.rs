@@ -5,10 +5,10 @@ use tauri::{
 
 /// system tray
 pub fn menu() -> SystemTray {
-    let quit = CustomMenuItem::new("quit".to_string(), "Quit");
-    let show = CustomMenuItem::new("show".to_string(), "Show");
-    let hide = CustomMenuItem::new("hide".to_string(), "Hide");
-    let config = CustomMenuItem::new("config".to_string(), "Config");
+    let quit = CustomMenuItem::new("quit".to_string(), "关闭软件");
+    let show = CustomMenuItem::new("show".to_string(), "显示桌宠");
+    let hide = CustomMenuItem::new("hide".to_string(), "隐藏桌宠");
+    let config = CustomMenuItem::new("config".to_string(), "配置");
     let tray_menu = SystemTrayMenu::new()
         .add_item(show)
         .add_item(hide)
@@ -30,26 +30,6 @@ pub fn handler(app: &AppHandle, event: SystemTrayEvent) {
                 let window = app.get_window("main").unwrap();
                 window.hide().unwrap();
             }
-            "config" => {
-                match app.get_window("config") {
-                    Some(w) => {
-                        w.show().unwrap();
-                    }
-                    None => {
-                        // main 窗口如果被关闭，重新实例化
-                        let config_win = tauri::WindowBuilder::new(
-                            app,
-                            "config",
-                            tauri::WindowUrl::App("index.html".into()),
-                        )
-                        .build()
-                        .unwrap();
-                        config_win.center();
-                        config_win.set_resizable(true);
-                        config_win.set_title("live2d看板娘配置");
-                    }
-                };
-            }
             "show" => {
                 match app.get_window("main") {
                     Some(w) => {
@@ -64,6 +44,27 @@ pub fn handler(app: &AppHandle, event: SystemTrayEvent) {
                         )
                         .build()
                         .unwrap();
+                    }
+                };
+            }
+            "config" => {
+                match app.get_window("config") {
+                    Some(w) => {
+                        w.show().unwrap();
+                    }
+                    None => {
+                        // main 窗口如果被关闭，重新实例化
+                        let config_win = tauri::WindowBuilder::new(
+                            app,
+                            "config",
+                            tauri::WindowUrl::App("index.html".into()),
+                        )
+                        .build()
+                        .unwrap();
+                        config_win.center().unwrap();
+                        config_win.set_resizable(true).unwrap();
+                        config_win.set_always_on_top(true).unwrap();
+                        config_win.set_title("配置").unwrap();
                     }
                 };
             }
