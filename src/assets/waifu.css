@@ -323,3 +323,7 @@
 .fui-checkbox-unchecked:before {
   content: "\e60d";
 }
+
+.fui-alert-circle:before {
+  content: "\e610";
+}

@@ -29,7 +29,17 @@
         <tr v-for="it in listRef" :key="it.url">
           <td>{{ it.type }}</td>
           <td>{{ it.url }}</td>
-          <td><n-button @click="loadModel(it.url)"> 加载 </n-button></td>
+          <td>
+            <n-space>
+              <n-button @click="loadModel(it.url)"> 加载 </n-button>
+              <n-button
+                v-if="it.type == 'remote'"
+                @click="removeLoadModel(it.url)"
+              >
+                删除
+              </n-button>
+            </n-space>
+          </td>
         </tr>
       </tbody>
     </n-table>
@@ -45,7 +55,11 @@
       @positive-click="addRemote"
       @negative-click="showModalRef = false"
     >
-      <n-input v-model:value="textareaRef" type="textarea"></n-input>
+      <n-input
+        v-model:value="textareaRef"
+        placeholder="请输入模型地址"
+        type="textarea"
+      ></n-input>
     </n-modal>
   </n-space>
 </template>
@@ -54,6 +68,7 @@
 import { onMounted, ref } from "vue";
 import * as dialog from "@tauri-apps/api/dialog";
 import { emit } from "@tauri-apps/api/event";
+import { relaunch } from "@tauri-apps/api/process";
 import { readConfig, writeConfig } from "@/util";
 import { NSpace, NTable, NButton, NInput, NModal } from "naive-ui";
 import { model_list, Live2dModelItem } from "@/plugins";
@@ -68,9 +83,10 @@ async function reloadIt() {
 }
 
 async function addRemote() {
+  let errors: string[] = [];
   if (textareaRef.value) {
     const textareaValue = textareaRef.value.split(",") || [];
-    textareaValue.map((it) => {
+    textareaValue.forEach((it) => {
       if (listRef.value.findIndex((mod) => mod.url.trim() == it.trim()) == -1) {
         listRef.value.push({
           url: it.trim(),
@@ -78,17 +94,32 @@ async function addRemote() {
         } as Live2dModelItem);
       }
     });
-    showModalRef.value = false;
-    const config = await readConfig();
-    config.remote_list = listRef.value.map((it) => it.url);
-    await writeConfig(JSON.stringify(config));
+    await saveLocalModels();
   }
+  textareaRef.value = "";
+}
+
+async function saveLocalModels() {
+  const config = await readConfig();
+  config.remote_list = listRef.value
+    .map((it) => it.url)
+    .filter((it) => !it.startsWith("http://localhost:13004"));
+  await writeConfig(JSON.stringify(config));
+  await reloadModels();
+}
+
+async function removeLoadModel(url: string) {
+  listRef.value = listRef.value.filter((it) => it.url != url);
+  await saveLocalModels();
 }
 
 async function loadModel(path: string) {
-  const patt =
-    path.indexOf("http") != -1 ? path : `http://localhost:13004${path}`;
-  await emit("load-model", patt);
+  if (path.startsWith("https://") || path.startsWith("http://")) {
+    await emit("load-model", path);
+  } else {
+    alert("错误的模型");
+    return;
+  }
 }
 async function fileSelect() {
   const selected = await dialog.open({
@@ -103,21 +134,31 @@ async function fileSelect() {
     config.serve_path = selected as string;
     servePathRef.value = selected;
     await writeConfig(JSON.stringify(config));
-    if (!serve_path) {
+    // 第一次
+    if (!serve_path && selected) {
       await emit("refresh-model", "");
       window.location.reload();
+    } else if (selected != serve_path) {
+      alert("模型目录变更，需要重启软件!!!");
+      setTimeout(async () => {
+        await relaunch();
+      }, 1300);
     }
   }
 }
 
 onMounted(async () => {
+  await reloadModels();
+});
+
+async function reloadModels() {
   const modelList = await model_list();
   if (modelList) {
     listRef.value = modelList;
     const config = await readConfig();
     servePathRef.value = config.serve_path;
   }
-});
+}
 </script>
 
 <style scoped></style>

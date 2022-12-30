@@ -12,6 +12,7 @@ import {
 
 import { readConfig, writeConfig, throttle } from "@/util";
 import { model_list } from "@/plugins";
+import { writeText } from "@tauri-apps/api/clipboard";
 import useListenEvent from "@/hooks/useListenEvent";
 window.PIXI = PIXI;
 const winSize = ref({ width: 500, height: 400 });
@@ -254,8 +255,17 @@ async function getModelUrl() {
 async function loadModel(uri) {
   if (modelRef.value) {
     await modelRef.value.destroy();
+    modelRef.value = undefined;
   }
-  const model = await Live2DModel.from(uri);
+  const model = await Live2DModel.from(uri)
+    .then((m) => m)
+    .catch((e) => {
+      alert(`模型加载失败 : [ ${e}]`);
+      return undefined;
+    });
+  if (!model) {
+    return;
+  }
   appRef.value?.stage.addChild(model);
   modelRef.value = model;
   const live2dwebview = WebviewWindow.getByLabel("main");
@@ -386,6 +396,14 @@ async function loadModelBlockState() {
     }
   }
 }
+
+async function openModel() {
+  const murl = localStorage.getItem("murl");
+  if (murl) {
+    alert(`复制当前模型成功,可在浏览器查看`);
+    await writeText(murl);
+  }
+}
 </script>
 
 <template>
@@ -423,6 +441,8 @@ async function loadModelBlockState() {
           @click="positionMove(modelRef)"
         ></span>
         <span class="fui-window" @click="resizeStart"></span>
+
+        <span class="fui-alert-circle" @click="openModel"></span>
         <span class="fui-lock" @click="ignoreCursorEvents"></span>
         <span class="fui-cross" @click="closeIt"></span>
       </div>
@@ -440,7 +460,7 @@ async function loadModelBlockState() {
 }
 
 .waifu-tool span {
-  font-size: 18px;
+  font-size: 17px;
   margin-right: 10px;
   margin-top: 5px;
 }
@@ -450,7 +470,7 @@ async function loadModelBlockState() {
 }
 .waifu-tool {
   margin: 0;
-  top: 20px;
+  top: 15px;
 }
 .block {
   color: #117be6;
