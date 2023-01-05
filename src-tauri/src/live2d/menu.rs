@@ -1,6 +1,6 @@
 use tauri::{
-    AppHandle, CustomMenuItem, Manager, Menu, SystemTray, SystemTrayEvent, SystemTrayMenu,
-    SystemTrayMenuItem, WindowMenuEvent, Wry,
+    AppHandle, CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu,
+    SystemTrayMenuItem, Wry,
 };
 
 /// system tray

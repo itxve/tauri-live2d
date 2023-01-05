@@ -2,12 +2,11 @@
     all(not(debug_assertions), target_os = "windows"),
     windows_subsystem = "windows"
 )]
-#![warn(unused_must_use)]
 mod live2d;
 mod plugins;
 
-use live2d::{config, my_command};
-use tauri::{generate_context, Manager};
+use live2d::my_command;
+use tauri::generate_context;
 
 #[tauri::command(main)]
 fn main() {

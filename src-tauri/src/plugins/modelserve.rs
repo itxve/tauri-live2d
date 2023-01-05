@@ -1,20 +1,14 @@
 use axum::handler::HandlerWithoutStateExt;
-use axum::{
-    http::StatusCode,
-    response::IntoResponse,
-    routing::{get, get_service},
-    Router,
-};
+use axum::{http::StatusCode, response::IntoResponse, routing::get_service, Router};
 
 use axum_server::Handle;
 use std::fs;
 use std::net::SocketAddr;
-use tauri::api::http;
 use tauri::{
     plugin::{Builder, TauriPlugin},
     Runtime,
 };
-use tauri::{window, AppHandle, Manager};
+use tauri::{window, Manager};
 use tower::ServiceExt;
 use tower_http::cors::{Any, CorsLayer};
 use tower_http::{services::ServeDir, trace::TraceLayer};
@@ -62,8 +56,6 @@ pub async fn _serve(serve_dir: &str) {
             .handle_error(handle_error),
         )
     }
-
-    println!("app router:{:?}", &app);
     axum_server::bind(SocketAddr::from(([127, 0, 0, 1], 13004)))
         .handle(handle)
         .serve(
@@ -164,11 +156,11 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             server_running,
             shutdown_cmd
         ])
-        .setup(move |app| {
+        .setup(move |_app| {
             println!("TauriPlugin [modelserver] ");
             Ok(())
         })
-        .on_page_load(|window, payload| {
+        .on_page_load(|window, _payload| {
             let app_data_path = tauri::api::path::app_config_dir(&window.config()).unwrap();
             let config_path = app_data_path.join(config::APP_CONFIG_FILE);
             if config_path.exists() {

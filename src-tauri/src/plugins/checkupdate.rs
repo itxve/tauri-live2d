@@ -1,10 +1,7 @@
 use anyhow::Result;
+use tauri::plugin::{Builder, TauriPlugin};
 use tauri::updater::UpdateResponse;
-use tauri::{
-    plugin::{Builder, TauriPlugin},
-    Runtime,
-};
-use tauri::{AppHandle, EventLoopMessage, Manager, Wry};
+use tauri::{AppHandle, Manager, Wry};
 
 #[tauri::command]
 pub fn run_check_update(app: AppHandle<Wry>) -> () {
@@ -71,7 +68,7 @@ Release Notes:
 pub fn init() -> TauriPlugin<Wry> {
     Builder::new("checkupdate")
         .invoke_handler(tauri::generate_handler![run_check_update])
-        .setup(move |app| {
+        .setup(move |_app| {
             println!("TauriPlugin [checkupdate] ");
             Ok(())
         })
