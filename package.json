@@ -26,7 +26,8 @@
     "tauri": "tauri",
     "tauri:dev": "RUST_BACKTRACE=full  tauri dev",
     "updater": "node scripts/updater.mjs",
-    "release": "node scripts/release.mjs"
+    "release": "node scripts/release.mjs",
+    "tauriversion": "node scripts/tauriversion.mjs"
   },
   "dependencies": {
     "@rollup/plugin-inject": "^5.0.3",

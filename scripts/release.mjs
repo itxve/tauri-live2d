@@ -3,6 +3,7 @@ import { execSync } from "child_process";
 import fs from "fs";
 
 import updatelog from "./updatelog.mjs";
+import updateTauriVersion from "./tauriversion.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -30,10 +31,13 @@ async function release() {
 
   const nextTag = `v${nextVersion}`;
   await updatelog(nextTag, "release");
+  await updateTauriVersion(nextVersion);
 
   fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
 
-  execSync("git add ./package.json ./UPDATE_LOG.md");
+  execSync(
+    "git add ./package.json ./UPDATE_LOG.md ./src-tauri/tauri.conf.json"
+  );
   execSync(`git commit -m "v${nextVersion}"`);
   execSync(`git tag -a v${nextVersion} -m "v${nextVersion}"`);
   execSync(`git push`);
