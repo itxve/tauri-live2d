@@ -46,6 +46,10 @@
 
 [Flat-UI](https://designmodo.github.io/Flat-UI)
 
+# 推荐学习项目
+
+[ChatGPT](https://github.com/lencx/ChatGPT)
+
 # 免责声明
 
 ### 该软件仅用于个人学习使用

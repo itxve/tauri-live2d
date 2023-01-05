@@ -11,7 +11,7 @@ version = "1.0.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = {version = "1.2.1", features = []}
+tauri-build = {version = "1.2.1", features = [] }
 
 [dependencies]
 anyhow = "1.0.66"
@@ -19,14 +19,14 @@ auto-launch = "0.4.0"
 axum = "0.6.1"
 axum-server = "0.4.4"
 glob = "0.3.0"
-notify = {version = "5.0.0", features = ["serde"]}
-serde = {version = "1.0", features = ["derive"]}
+notify = {version = "5.0.0", features = ["serde"] }
+serde = {version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-tauri = {version = "1.2.3", features = ["api-all", "macos-private-api", "system-tray", "updater"]}
+tauri = {version = "1.2.3", features = ["api-all", "macos-private-api", "system-tray", "updater"] }
 thiserror = "1.0"
-tokio = {version = "1.23.0", features = ["macros"]}
-tower = {version = "0.4", features = ["util"]}
-tower-http = {version = "0.3.0", features = ["fs", "trace", "cors"]}
+tokio = {version = "1.23.0", features = ["macros"] }
+tower = {version = "0.4", features = ["util"] }
+tower-http = {version = "0.3.0", features = ["fs", "trace", "cors"] }
 
 [features]
 # by default Tauri runs in production mode

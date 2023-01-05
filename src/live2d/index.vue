@@ -3,7 +3,7 @@ import "@/assets/waifu.css";
 import * as PIXI from "pixi.js";
 import { InternalModel, Live2DModel } from "pixi-live2d-display";
 import { onMounted, onUnmounted, ref } from "vue";
-import { invoke } from "@tauri-apps/api/tauri";
+import { checkUpdate } from "@tauri-apps/api/updater";
 import {
   WebviewWindow,
   appWindow,
@@ -11,9 +11,10 @@ import {
   PhysicalSize,
 } from "@tauri-apps/api/window";
 import { readConfig, writeConfig, throttle } from "@/util";
-import { modelserve, checkupdate } from "@/plugins";
+import { modelserve } from "@/plugins";
 import { writeText } from "@tauri-apps/api/clipboard";
 import useListenEvent from "@/hooks/useListenEvent";
+import useUpdate from "@/hooks/useUpdate";
 
 window.PIXI = PIXI;
 const winSize = ref({ width: 500, height: 400 });
@@ -118,8 +119,17 @@ onMounted(async () => {
   );
 
   await init();
-  await check_app_update();
+  await check_update_version();
 });
+
+async function check_update_version() {
+  const config = await readConfig();
+  if (config.check_update === false) {
+    return;
+  } else {
+    await useUpdate();
+  }
+}
 /**
  * 缩放按键 在可移动模型下生效
  * @param event
@@ -173,17 +183,8 @@ onUnmounted(() => {
   if (onFocusRef.value) {
     onFocusRef.value();
   }
-
   off_keydownEvent();
 });
-
-async function check_app_update() {
-  const config = await readConfig();
-  const check_update = config.check_update === false ? false : true;
-  if (check_update) {
-    await checkupdate.check_version_update();
-  }
-}
 
 async function closeIt() {
   const live2dwebview = WebviewWindow.getByLabel("main");

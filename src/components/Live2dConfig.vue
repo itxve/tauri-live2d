@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { readConfig, writeConfig } from "@/util";
-import { autostart, checkupdate } from "@/plugins";
+import useUpdate from "@/hooks/useUpdate";
+import { autostart } from "@/plugins";
 import {
   WebviewWindow,
   PhysicalPosition,
@@ -76,7 +77,7 @@ async function enableMouse() {
 
 async function switchCheckUpdate(e: boolean) {
   if (e) {
-    await checkupdate.check_version_update();
+    await useUpdate();
   }
   checkUpdateRef.value = e;
   const config = await readConfig();

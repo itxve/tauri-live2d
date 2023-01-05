@@ -3,12 +3,11 @@
     "beforeDevCommand": "pnpm dev",
     "beforeBuildCommand": "pnpm build",
     "devPath": "http://localhost:1420",
-    "distDir": "../dist",
-    "withGlobalTauri": true
+    "distDir": "../dist"
   },
   "package": {
     "productName": "live2d",
-    "version": "3.0.3"
+    "version": "3.0.0"
   },
   "tauri": {
     "allowlist": {
@@ -72,12 +71,15 @@
       "csp": null
     },
     "updater": {
-      "active": false,
-      "dialog": true,
+      "active": true,
+      "dialog": false,
       "endpoints": [
         "https://itxve.github.io/tauri-live2d/install.json"
       ],
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDE5QkUzMjVDRkE2RTNBQTAKUldTZ09tNzZYREsrR2RGcGV5Ykc2KzVWVWJFRTM5b2dCSXFYWlQ3TjcxZWI3aWhiK0RCTnlrN2sK"
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDE5QkUzMjVDRkE2RTNBQTAKUldTZ09tNzZYREsrR2RGcGV5Ykc2KzVWVWJFRTM5b2dCSXFYWlQ3TjcxZWI3aWhiK0RCTnlrN2sK",
+      "windows": {
+        "installMode": "quiet"
+      }
     },
     "windows": [
       {
