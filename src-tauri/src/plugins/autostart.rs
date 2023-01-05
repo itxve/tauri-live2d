@@ -1,6 +1,5 @@
 use auto_launch::{AutoLaunch, AutoLaunchBuilder};
 use tauri::{
-    command,
     plugin::{Builder, TauriPlugin},
     Manager, Runtime, State,
 };
@@ -50,17 +49,17 @@ impl<R: Runtime, T: Manager<R>> ManagerExt<R> for T {
     }
 }
 
-#[command]
+#[tauri::command]
 async fn enable(manager: State<'_, AutoLaunchManager>) -> Result<()> {
     manager.enable()
 }
 
-#[command]
+#[tauri::command]
 async fn disable(manager: State<'_, AutoLaunchManager>) -> Result<()> {
     manager.disable()
 }
 
-#[command]
+#[tauri::command]
 async fn is_enabled(manager: State<'_, AutoLaunchManager>) -> Result<bool> {
     manager.is_enabled()
 }
@@ -75,8 +74,8 @@ pub fn init<R: Runtime>(
     Builder::new("autostart")
         .invoke_handler(tauri::generate_handler![enable, disable, is_enabled])
         .setup(move |app| {
+            println!("TauriPlugin [autostart] ");
             let mut builder = AutoLaunchBuilder::new();
-
             builder.set_app_name(&app.package_info().name);
             if let Some(args) = args {
                 builder.set_args(&args);

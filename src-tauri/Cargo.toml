@@ -1,10 +1,10 @@
 [package]
-name = "my-tauri-app"
+name = "live2d"
 version = "1.0.0"
-description = "A Tauri App"
+description = "A Tauri App For Live2d"
 authors = ["you"]
-license = ""
-repository = ""
+license = "MIT"
+repository = "https://github.com/itxve/tauri-live2d"
 edition = "2021"
 rust-version = "1.65.0"
 
@@ -21,8 +21,9 @@ notify = { version = "5.0.0", features = ["serde"] }
 auto-launch = "0.4.0"
 thiserror = "1.0"
 axum-server = "0.4.4"
+anyhow = "1.0.66"
 axum = "0.6.1"
-tokio = { version = "1.23.0", features = ["full"] }
+tokio = { version = "1.23.0", features = ["macros"] }
 tower = { version = "0.4", features = ["util"] }
 tower-http = { version = "0.3.0", features = ["fs", "trace","cors"] }
 glob = "0.3.0"

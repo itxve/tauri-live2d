@@ -1,3 +1,3 @@
-export * from "./autostart";
-export * from "./model_serve";
-
+export * as autostart from "./autostart";
+export * as modelserve from "./modelserve";
+export * as checkupdate from "./checkupdate";

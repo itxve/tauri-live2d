@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { readConfig, writeConfig } from "@/util";
-import { enable, disable, isEnabled } from "@/plugins";
+import { autostart, checkupdate } from "@/plugins";
 import {
   WebviewWindow,
   PhysicalPosition,
@@ -19,6 +19,7 @@ import { onMounted, ref } from "vue";
 import Models from "./Models.vue";
 
 const autoStartRef = ref(false);
+const checkUpdateRef = ref(true);
 const tabRef = ref();
 
 async function Close() {
@@ -73,11 +74,21 @@ async function enableMouse() {
   alert("鼠标事件开启成功");
 }
 
+async function switchCheckUpdate(e: boolean) {
+  if (e) {
+    await checkupdate.check_version_update();
+  }
+  checkUpdateRef.value = e;
+  const config = await readConfig();
+  config.check_update = e;
+  await writeConfig(JSON.stringify(config));
+}
+
 async function switchAutoStart(e: boolean) {
   if (e) {
-    await enable();
+    await autostart.enable();
   } else {
-    await disable();
+    await autostart.disable();
   }
   autoStartRef.value = e;
   const config = await readConfig();
@@ -92,8 +103,10 @@ async function beforeLeave(name: string, oldName: string) {
 }
 
 onMounted(async () => {
+  const config = await readConfig();
   tabRef.value = localStorage.getItem("tab_switch") || "config";
-  autoStartRef.value = await isEnabled();
+  autoStartRef.value = await autostart.isEnabled();
+  checkUpdateRef.value = config.check_update!;
 });
 </script>
 
@@ -119,6 +132,15 @@ onMounted(async () => {
               size="medium"
             >
               <template #icon> 🌈 </template>
+            </n-switch>
+          </n-form-item>
+          <n-form-item label="检查更新">
+            <n-switch
+              @update-value="switchCheckUpdate"
+              v-model:value="checkUpdateRef"
+              size="medium"
+            >
+              <template #icon> ⬆️ </template>
             </n-switch>
           </n-form-item>
           <n-form-item label="live2d操作">

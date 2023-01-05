@@ -20,6 +20,7 @@ export interface AppConfig {
   height?: number;
   x?: number;
   y?: number;
+  check_update?: boolean;
   remote_list?: string[];
   model_block?: boolean;
   [key: string]: any;

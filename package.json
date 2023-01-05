@@ -3,7 +3,22 @@
   "private": true,
   "version": "3.0.2",
   "type": "module",
-  "repository": "https://github.com/itxve/tauri-live2d",
+  "license": "MIT",
+  "keywords": [
+    "live2d",
+    "desktop",
+    "pixijs",
+    "tauri",
+    "macos",
+    "linux",
+    "windows"
+  ],
+  "homepage": "https://github.com/itxve/tauri-live2d",
+  "bugs": "https://github.com/itxve/tauri-live2d/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/itxve/tauri-live2d"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",

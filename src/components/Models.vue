@@ -71,10 +71,10 @@ import { emit } from "@tauri-apps/api/event";
 import { relaunch } from "@tauri-apps/api/process";
 import { readConfig, writeConfig } from "@/util";
 import { NSpace, NTable, NButton, NInput, NModal } from "naive-ui";
-import { model_list, Live2dModelItem } from "@/plugins";
+import { modelserve } from "@/plugins";
 
 const servePathRef = ref();
-const listRef = ref<Array<Live2dModelItem>>([]);
+const listRef = ref<Array<modelserve.Live2dModelItem>>([]);
 const showModalRef = ref(false);
 const textareaRef = ref<string>();
 
@@ -91,7 +91,7 @@ async function addRemote() {
         listRef.value.push({
           url: it.trim(),
           type: "remote",
-        } as Live2dModelItem);
+        } as modelserve.Live2dModelItem);
       }
     });
     await saveLocalModels();
@@ -152,7 +152,7 @@ onMounted(async () => {
 });
 
 async function reloadModels() {
-  const modelList = await model_list();
+  const modelList = await modelserve.model_list();
   if (modelList) {
     listRef.value = modelList;
     const config = await readConfig();

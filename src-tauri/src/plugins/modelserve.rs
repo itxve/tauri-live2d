@@ -11,7 +11,6 @@ use std::fs;
 use std::net::SocketAddr;
 use tauri::api::http;
 use tauri::{
-    command,
     plugin::{Builder, TauriPlugin},
     Runtime,
 };
@@ -24,7 +23,7 @@ use tower_http::{services::ServeDir, trace::TraceLayer};
 static mut HAS_WATCH: bool = false;
 
 //web本地服务
-#[command]
+#[tauri::command]
 pub fn start_serve(serve_dir: String) {
     if unsafe { HAS_WATCH } == true {
         println!("serve is running");
@@ -33,6 +32,7 @@ pub fn start_serve(serve_dir: String) {
         std::thread::spawn(move || {
             _serve(&serve_dir);
         });
+        println!("serve start listen");
     }
 }
 #[tokio::main]
@@ -96,7 +96,7 @@ async fn handle_error(_err: std::io::Error) -> impl IntoResponse {
 use crate::live2d::{config, mstruct};
 use crate::plugins::{Error, Result};
 
-#[command]
+#[tauri::command]
 async fn shutdown_cmd() -> Result<u16> {
     use tauri::api::http::{ClientBuilder, HttpRequestBuilder, ResponseType};
     let client = ClientBuilder::new().build().unwrap();
@@ -115,7 +115,7 @@ async fn shutdown_cmd() -> Result<u16> {
     return Err(Error::Anyhow("shutdown fail".to_string()));
 }
 
-#[command]
+#[tauri::command]
 async fn server_running() -> Result<u16> {
     use tauri::api::http::{ClientBuilder, HttpRequestBuilder, ResponseType};
     let client = ClientBuilder::new().build().unwrap();
@@ -134,7 +134,7 @@ async fn server_running() -> Result<u16> {
     return Err(Error::Anyhow("serve not running".to_string()));
 }
 
-#[command]
+#[tauri::command]
 fn model_list(serve_dir: &str) -> Result<Vec<String>> {
     use glob::glob;
     let mut models = vec![];
@@ -164,7 +164,10 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             server_running,
             shutdown_cmd
         ])
-        .setup(move |app| Ok(()))
+        .setup(move |app| {
+            println!("TauriPlugin [modelserver] ");
+            Ok(())
+        })
         .on_page_load(|window, payload| {
             let app_data_path = tauri::api::path::app_config_dir(&window.config()).unwrap();
             let config_path = app_data_path.join(config::APP_CONFIG_FILE);

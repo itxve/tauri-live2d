@@ -1,8 +1,11 @@
 use crate::config;
 use crate::live2d::mstruct::{AppDataConfig, InitType, Rt};
+use anyhow::Result;
 use notify::{RecursiveMode, Watcher};
 use std::sync::mpsc::channel;
 use std::{fs, io::Read, path::PathBuf};
+use tauri::updater::UpdateResponse;
+use tauri::{AppHandle, Manager, SystemTrayMenuItem, WindowMenuEvent, Wry};
 
 #[tauri::command]
 pub fn read_file(file_path: std::path::PathBuf) -> Rt<Vec<u8>> {

@@ -21,3 +21,4 @@ pub type Result<T> = std::result::Result<T, Error>;
 
 pub mod autostart;
 pub mod modelserve;
+pub mod checkupdate;

@@ -22,9 +22,10 @@ fn main() {
             plugins::autostart::MacosLauncher::LaunchAgent,
             None,
         ))
+        .plugin(plugins::checkupdate::init())
         .plugin(plugins::modelserve::init())
-        .system_tray(live2d::tray::menu())
-        .on_system_tray_event(live2d::tray::handler)
+        .system_tray(live2d::menu::tray_menu())
+        .on_system_tray_event(live2d::menu::tray_handler)
         .invoke_handler(tauri::generate_handler![
             my_command::read_file,
             my_command::write_file,

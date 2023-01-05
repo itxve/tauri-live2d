@@ -3,17 +3,18 @@ import "@/assets/waifu.css";
 import * as PIXI from "pixi.js";
 import { InternalModel, Live2DModel } from "pixi-live2d-display";
 import { onMounted, onUnmounted, ref } from "vue";
+import { invoke } from "@tauri-apps/api/tauri";
 import {
   WebviewWindow,
   appWindow,
   PhysicalPosition,
   PhysicalSize,
 } from "@tauri-apps/api/window";
-
 import { readConfig, writeConfig, throttle } from "@/util";
-import { model_list } from "@/plugins";
+import { modelserve, checkupdate } from "@/plugins";
 import { writeText } from "@tauri-apps/api/clipboard";
 import useListenEvent from "@/hooks/useListenEvent";
+
 window.PIXI = PIXI;
 const winSize = ref({ width: 500, height: 400 });
 const factorRef = ref(1);
@@ -44,6 +45,7 @@ useListenEvent("refresh-model", async ({ windowLabel }) => {
     await reloadPositionScale();
   }
 });
+
 /**
  * 初始化
  */
@@ -116,6 +118,7 @@ onMounted(async () => {
   );
 
   await init();
+  await check_app_update();
 });
 /**
  * 缩放按键 在可移动模型下生效
@@ -173,6 +176,14 @@ onUnmounted(() => {
 
   off_keydownEvent();
 });
+
+async function check_app_update() {
+  const config = await readConfig();
+  const check_update = config.check_update === false ? false : true;
+  if (check_update) {
+    await checkupdate.check_version_update();
+  }
+}
 
 async function closeIt() {
   const live2dwebview = WebviewWindow.getByLabel("main");
@@ -241,7 +252,7 @@ async function reloadPositionScale() {
  * 获取一个模型的url
  */
 async function getModelUrl() {
-  let arr = await model_list();
+  let arr = await modelserve.model_list();
   const modelUrl = arr[Math.floor(Math.random() * arr.length)];
   modelUrlRef.value =
     modelUrl?.url ||

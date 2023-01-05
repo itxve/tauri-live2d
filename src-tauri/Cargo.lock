@@ -1523,6 +1523,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "live2d"
+version = "1.0.0"
+dependencies = [
+ "anyhow",
+ "auto-launch",
+ "axum",
+ "axum-server",
+ "glob",
+ "notify",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "thiserror",
+ "tokio",
+ "tower",
+ "tower-http",
+]
+
+[[package]]
 name = "lock_api"
 version = "0.4.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1675,25 +1695,6 @@ dependencies = [
  "log",
  "wasi 0.11.0+wasi-snapshot-preview1",
  "windows-sys 0.42.0",
-]
-
-[[package]]
-name = "my-tauri-app"
-version = "1.0.0"
-dependencies = [
- "auto-launch",
- "axum",
- "axum-server",
- "glob",
- "notify",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "thiserror",
- "tokio",
- "tower",
- "tower-http",
 ]
 
 [[package]]
@@ -2754,15 +2755,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "signal-hook-registry"
-version = "1.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e51e73328dc4ac0c7ccbda3a494dfa03df1de2f46018127f60c693f2648455b0"
-dependencies = [
- "libc",
-]
-
-[[package]]
 name = "siphasher"
 version = "0.3.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3297,9 +3289,7 @@ dependencies = [
  "memchr",
  "mio",
  "num_cpus",
- "parking_lot",
  "pin-project-lite",
- "signal-hook-registry",
  "socket2",
  "tokio-macros",
  "windows-sys 0.42.0",

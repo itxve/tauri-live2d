@@ -1,14 +1,15 @@
 use tauri::{
-    AppHandle, CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu,
-    SystemTrayMenuItem,
+    AppHandle, CustomMenuItem, Manager, Menu, SystemTray, SystemTrayEvent, SystemTrayMenu,
+    SystemTrayMenuItem, WindowMenuEvent, Wry,
 };
 
 /// system tray
-pub fn menu() -> SystemTray {
+pub fn tray_menu() -> SystemTray {
     let quit = CustomMenuItem::new("quit".to_string(), "关闭软件");
     let show = CustomMenuItem::new("show".to_string(), "显示桌宠");
     let hide = CustomMenuItem::new("hide".to_string(), "隐藏桌宠");
-    let config = CustomMenuItem::new("config".to_string(), "配置");
+    let config = CustomMenuItem::new("config".to_string(), "配置中心");
+
     let tray_menu = SystemTrayMenu::new()
         .add_item(show)
         .add_item(hide)
@@ -16,18 +17,17 @@ pub fn menu() -> SystemTray {
         .add_item(config)
         .add_native_item(SystemTrayMenuItem::Separator)
         .add_item(quit);
-
     SystemTray::new().with_menu(tray_menu)
 }
 
-pub fn handler(app: &AppHandle, event: SystemTrayEvent) {
+pub fn tray_handler(app: &AppHandle<Wry>, event: SystemTrayEvent) {
     match event {
         SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
             "quit" => {
                 std::process::exit(0);
             }
             "hide" => {
-                let window = app.get_window("main").unwrap();
+                let window = &app.get_window("main").unwrap();
                 window.hide().unwrap();
             }
             "show" => {
@@ -54,17 +54,17 @@ pub fn handler(app: &AppHandle, event: SystemTrayEvent) {
                     }
                     None => {
                         // main 窗口如果被关闭，重新实例化
-                        let config_win = tauri::WindowBuilder::new(
+                        tauri::WindowBuilder::new(
                             app,
                             "config",
                             tauri::WindowUrl::App("index.html".into()),
                         )
+                        .title("配置")
+                        .center()
+                        .resizable(true)
+                        .always_on_top(true)
                         .build()
                         .unwrap();
-                        config_win.center().unwrap();
-                        config_win.set_resizable(true).unwrap();
-                        config_win.set_always_on_top(true).unwrap();
-                        config_win.set_title("配置").unwrap();
                     }
                 };
             }

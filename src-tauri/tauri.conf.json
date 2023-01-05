@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "live2d",
-    "version": "3.0.2"
+    "version": "3.0.1"
   },
   "tauri": {
     "allowlist": {
@@ -42,7 +42,7 @@
         "icons/icon.ico"
       ],
       "identifier": "com.rust.live2d",
-      "longDescription": "",
+      "longDescription": "Live2D Desktop Application",
       "macOS": {
         "entitlements": null,
         "exceptionDomain": "",
@@ -51,12 +51,16 @@
         "signingIdentity": null
       },
       "resources": [],
-      "shortDescription": "",
+      "shortDescription": "Live2D",
       "targets": "all",
       "windows": {
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
-        "timestampUrl": ""
+        "timestampUrl": "",
+        "webviewInstallMode": {
+          "silent": true,
+          "type": "embedBootstrapper"
+        }
       }
     },
     "systemTray": {
@@ -68,7 +72,7 @@
       "csp": null
     },
     "updater": {
-      "active": true,
+      "active": false,
       "dialog": true,
       "endpoints": [
         "https://itxve.github.io/tauri-live2d/install.json"

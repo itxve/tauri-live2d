@@ -3,6 +3,7 @@
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import Live2dConfig from "./components/Live2dConfig.vue";
 import { repository, version } from "../package.json";
+
 </script>
 
 <template>
@@ -11,7 +12,7 @@ import { repository, version } from "../package.json";
     <footer class="footer">
       <div>
         © 2022
-        <a target="_blank" :href="repository">
+        <a target="_blank" :href="repository.url">
           <b>GitHub</b>
         </a>
         V{{ version }}
