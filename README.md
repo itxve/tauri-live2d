@@ -2,7 +2,7 @@
   <img src="./app-icon.png" width="150" height="150" />
 </p>
 
-### 为什么有这个项目
+### 为什么有这个项目 (目前退坑了)
 
 - electron 版本的 live2d,软件占用太大了(近 100M),tauri(5M)，电脑内存太小放弃了 electron
 - tauri 没有 electron 那么完备的社区(太痛了)
