@@ -6,6 +6,7 @@
 
 - electron 版本的 live2d,软件占用太大了(近 100M),tauri(5M)，电脑内存太小放弃了 electron
 - tauri 没有 electron 那么完备的社区(太痛了)
+- tauri 有个缺点CPU使用率挺高的 ！！！是·
 
 ### 功能演示
 
@@ -49,6 +50,16 @@
 # 推荐学习项目
 
 [ChatGPT](https://github.com/lencx/ChatGPT)
+
+# 相关项目
+[PPet](https://github.com/zenghongtu/PPet)
+
+[live2dviewer](https://github.com/doitian/live2dviewer)
+
+Live2DViewerEX
+
+Model资源： [zenghongtu/live2d-model-assets](https://github.com/zenghongtu/live2d-model-assets)
+
 
 # 免责声明
 
