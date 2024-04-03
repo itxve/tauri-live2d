@@ -57,11 +57,7 @@ async function init() {
     backgroundAlpha: 0,
   });
   appRef.value = app;
-  if (localStorage.getItem("murl")) {
-    modelUrlRef.value = localStorage.getItem("murl");
-  } else {
-    await getModelUrl();
-  }
+  await getModelUrl();
   await loadModel(modelUrlRef.value);
   await reloadPositionScale();
   await loadModelBlockState();
@@ -261,7 +257,7 @@ async function getModelUrl() {
 }
 
 /**
- * 加载模型
+ * 加载模型（
  * @param uri 模型url
  */
 async function loadModel(uri) {
@@ -269,6 +265,7 @@ async function loadModel(uri) {
     await modelRef.value.destroy();
     modelRef.value = undefined;
   }
+
   const model = await Live2DModel.from(uri)
     .then((m) => m)
     .catch((e) => {
@@ -278,7 +275,7 @@ async function loadModel(uri) {
   if (!model) {
     return;
   }
-  appRef.value?.stage.addChild(model);
+  appRef.value?.stage.addChild(model as any);
   modelRef.value = model;
   const live2dwebview = WebviewWindow.getByLabel("main");
   const size = await live2dwebview?.innerSize();
@@ -295,7 +292,6 @@ async function loadModel(uri) {
       model.expression();
     }
   });
-  localStorage.setItem("murl", uri);
   tryAddFrame();
 }
 
@@ -434,29 +430,42 @@ async function openModel() {
       />
 
       <div class="waifu-tool">
-        <span class="fui-gear" @click="openConfigWin"></span>
+        <span class="fui-gear" @click="openConfigWin" title="打开配置"></span>
         <span
           :class="{
             'fui-checkbox-unchecked': true,
             block: modelBlockRef,
           }"
+          title="更换模型"
           @click="changeModelBlock"
         >
         </span>
         <!-- <span class="fui-chat"></span> -->
-        <span class="fui-eye" @click="nextModel"></span>
+        <span class="fui-eye" @click="nextModel" title="下一个模型s"></span>
         <span
+          title="调整模型位置"
           class="fui-location"
           :style="{
             color: buttonModeRef ? '#117be6' : '',
           }"
           @click="positionMove(modelRef)"
         ></span>
-        <span class="fui-window" @click="resizeStart"></span>
-
-        <span class="fui-alert-circle" @click="openModel"></span>
-        <span class="fui-lock" @click="ignoreCursorEvents"></span>
-        <span class="fui-cross" @click="closeIt"></span>
+        <span
+          class="fui-window"
+          @click="resizeStart"
+          title="调整模型大小"
+        ></span>
+        <span
+          class="fui-alert-circle"
+          @click="openModel"
+          title="复制模型地址"
+        ></span>
+        <span
+          class="fui-lock"
+          @click="ignoreCursorEvents"
+          title="忽略鼠标事件"
+        ></span>
+        <span class="fui-cross" @click="closeIt" title="关闭"></span>
       </div>
     </div>
   </div>

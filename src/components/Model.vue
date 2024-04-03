@@ -83,7 +83,6 @@ async function reloadIt() {
 }
 
 async function addRemote() {
-  let errors: string[] = [];
   if (textareaRef.value) {
     const textareaValue = textareaRef.value.split(",") || [];
     textareaValue.forEach((it) => {
@@ -103,7 +102,7 @@ async function saveLocalModels() {
   const config = await readConfig();
   config.remote_list = listRef.value
     .map((it) => it.url)
-    .filter((it) => !it.startsWith("http://localhost:13004"));
+    .filter((it) => !it.startsWith(`http://127.0.0.1:${config.port}`));
   await writeConfig(JSON.stringify(config));
   await reloadModels();
 }
@@ -117,32 +116,28 @@ async function loadModel(path: string) {
   if (path.startsWith("https://") || path.startsWith("http://")) {
     await emit("load-model", path);
   } else {
-    alert("错误的模型");
+    alert("错误的模型" + path);
     return;
   }
 }
 async function fileSelect() {
   const selected = await dialog.open({
-    title: "选择本地model",
+    title: "选择本地模型",
     multiple: false,
     directory: true,
   });
 
   if (selected) {
     const config = await readConfig();
-    const serve_path = config.serve_path;
-    config.serve_path = selected as string;
+    const model_dir = config.model_dir;
+    config.model_dir = selected as string;
     servePathRef.value = selected;
     await writeConfig(JSON.stringify(config));
-    // 第一次
-    if (!serve_path && selected) {
-      await emit("refresh-model", "");
-      window.location.reload();
-    } else if (selected != serve_path) {
-      alert("模型目录变更，需要重启软件!!!");
-      setTimeout(async () => {
-        await relaunch();
-      }, 1300);
+    if (selected != model_dir) {
+      const result = await dialog.confirm("模型目录变更，需要重启软件!!!");
+      if (result) {
+        relaunch();
+      }
     }
   }
 }
@@ -156,7 +151,7 @@ async function reloadModels() {
   if (modelList) {
     listRef.value = modelList;
     const config = await readConfig();
-    servePathRef.value = config.serve_path;
+    servePathRef.value = config.model_dir;
   }
 }
 </script>

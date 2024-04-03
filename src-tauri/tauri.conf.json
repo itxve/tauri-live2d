@@ -7,7 +7,7 @@
   },
   "package": {
     "productName": "live2d",
-    "version": "3.0.4"
+    "version": "3.0.5"
   },
   "tauri": {
     "allowlist": {
@@ -19,10 +19,32 @@
         ]
       },
       "fs": {
-        "all": true,
+        "all": false,
+        "readFile": true,
+        "writeFile": true,
+        "readDir": true,
+        "createDir": true,
+        "exists": true,
+        "removeFile": true,
+        "removeDir": true,
         "scope": [
-          "$APPDATA/*"
+          "$APPDATA/*",
+          "$HOME/.live2d/**"
         ]
+      },
+      "dialog": {
+        "all": true,
+        "ask": true,
+        "confirm": true,
+        "message": true,
+        "open": true,
+        "save": true
+      },
+      "process": {
+        "all": true,
+        "exit": true,
+        "relaunch": true,
+        "relaunchDangerousAllowSymlinkMacos": true
       }
     },
     "bundle": {

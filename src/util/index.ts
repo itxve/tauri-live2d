@@ -1,21 +1,9 @@
-import {
-  writeTextFile,
-  readTextFile,
-  BaseDirectory,
-  exists,
-} from "@tauri-apps/api/fs";
-
 import { invoke } from "@tauri-apps/api/tauri";
-
-const APP_CONFIG_FILE_NAME = "app.config.json";
-const JY_FILE_NAME = "root_meta_info";
-
-export { JY_FILE_NAME, APP_CONFIG_FILE_NAME };
-
 import { RustCallResult } from "@/types";
 
 export interface AppConfig {
-  serve_path?: string;
+  model_dir?: string;
+  port: number;
   width?: number;
   height?: number;
   x?: number;
@@ -31,18 +19,7 @@ export interface AppConfig {
  * @returns
  */
 export async function readConfig(): Promise<AppConfig> {
-  if (!(await exists(APP_CONFIG_FILE_NAME, { dir: BaseDirectory.AppConfig }))) {
-    return {} as AppConfig;
-  }
-  const config = await readTextFile(APP_CONFIG_FILE_NAME, {
-    dir: BaseDirectory.AppConfig,
-  });
-  try {
-    return JSON.parse(config) as AppConfig;
-  } catch (error) {
-    writeConfig("");
-    return {} as AppConfig;
-  }
+  return invoke<AppConfig>("read_config");
 }
 
 /**
@@ -50,9 +27,7 @@ export async function readConfig(): Promise<AppConfig> {
  * @param data 文件内容
  */
 export async function writeConfig(data: string) {
-  await writeTextFile(APP_CONFIG_FILE_NAME, data, {
-    dir: BaseDirectory.AppConfig,
-  });
+  await invoke<AppConfig>("write_config", { value: data });
 }
 
 /**

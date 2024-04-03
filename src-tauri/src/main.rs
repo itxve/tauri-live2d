@@ -2,19 +2,30 @@
     all(not(debug_assertions), target_os = "windows"),
     windows_subsystem = "windows"
 )]
-mod live2d;
+mod app;
 mod plugins;
+mod utils;
+use log::info;
+use web_server;
 
-use live2d::my_command;
-use tauri::generate_context;
+use app::{config::AppConf, commands};
 
 #[tauri::command(main)]
 fn main() {
-    let app = tauri::Builder::default()
+    let context = tauri::generate_context!();
+    let app = tauri::Builder::default();
+    let app_conf = AppConf::read().write();
+    let port = web_server::Port(web_server::get_available_port(), app_conf.model_dir.clone());
+    if app_conf.model_dir != "" {
+        AppConf::read()
+            .amend(serde_json::json!({ "port":port.0 }))
+            .write();
+        tauri::async_runtime::spawn(web_server::app(port.clone()));
+    }
+
+    app.manage(port.clone())
         .setup(|app| {
-            let app_data_path = tauri::api::path::app_config_dir(&app.config());
-            //初始化app config目录
-            my_command::init_app_data_path(app_data_path.unwrap());
+            info!("app running...");
             Ok(())
         })
         .plugin(plugins::autostart::init(
@@ -22,20 +33,22 @@ fn main() {
             None,
         ))
         .plugin(plugins::checkupdate::init())
-        .plugin(plugins::modelserve::init())
-        .system_tray(live2d::menu::tray_menu())
-        .on_system_tray_event(live2d::menu::tray_handler)
+        .system_tray(app::menu::tray_menu())
+        .on_system_tray_event(app::menu::tray_handler)
         .invoke_handler(tauri::generate_handler![
-            my_command::read_file,
-            my_command::write_file,
+            commands::read_file,
+            commands::write_file,
+            commands::model_list,
+            commands::read_config,
+            commands::write_config
         ])
-        .build(generate_context!())
-        .expect("error while running tauri application");
-    app.run(|_app_handle, event| match event {
-        tauri::RunEvent::ExitRequested { api, .. } => {
-            println!("last close");
-            api.prevent_exit();
-        }
-        _ => {}
-    })
+        .build(context)
+        .expect("error while running live2d application")
+        .run(|_app_handle, event| match event {
+            tauri::RunEvent::ExitRequested { api, .. } => {
+                println!("last close");
+                api.prevent_exit();
+            }
+            _ => {}
+        })
 }

@@ -1,9 +1,8 @@
 <script setup lang="ts">
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import Live2dConfig from "./components/Live2dConfig.vue";
+import Live2dConfig from "./components/Config.vue";
 import { repository, version } from "../package.json";
-
 </script>
 
 <template>

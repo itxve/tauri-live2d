@@ -17,7 +17,7 @@ import {
   NTabs,
 } from "naive-ui";
 import { onMounted, ref } from "vue";
-import Models from "./Models.vue";
+import Models from "./Model.vue";
 
 const autoStartRef = ref(false);
 const checkUpdateRef = ref(true);
