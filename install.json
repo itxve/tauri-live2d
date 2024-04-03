@@ -1,0 +1,35 @@
+{
+  "version": "v3.0.5",
+  "notes": "优化code 😆😆😆",
+  "pub_date": "2024-04-03T08:52:21.923Z",
+  "platforms": {
+    "win64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTZ09tNzZYREsrR2UycEFpSEkrZHBYcVNVeU5GYmdyZEUyMldGTzZWRzVzMGpzemgrcHJCdk8wUHVJR3NibHFBbmtKQUttUTZ6VW5kSTh1azFIR0V4Z2MzK2UvMXlFY0FjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzEyMTM0MjgwCWZpbGU6bGl2ZTJkXzMuMC41X3g2NF9lbi1VUy5tc2kuemlwCnhLR29NMlAvbXR2eGhQWFV3ZHYwalZ3bjRqTERuMURISHBlUzFNVDRBRG53QmdLQnJacEcvY25SSUwrWnp3aXB6c1NYVlloYzhIcnhhN2ZDUzRJUkJBPT0K",
+      "url": "https://github.com/itxve/tauri-live2d/releases/download/v3.0.5/live2d_3.0.5_x64_en-US.msi.zip"
+    },
+    "linux": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTZ09tNzZYREsrR2Y3MzZTV1dVVEtXTnRVNE5PM2s0K0ZPY1FtM0tiSkIxUjFiSVdpTVFqbXZvbUNvT2JUekFtMTBvMUhodEcxdUdXcWVsZ0FtRnliRm5Jc1RlVUlzdlFBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzEyMTM0MTU4CWZpbGU6bGl2ZTJkXzMuMC41X2FtZDY0LkFwcEltYWdlLnRhci5negpETllES1lhUEtFVXYrNW05Zkd1a3FKZXQ2K3BTd2JkYW9aTEg0STE4QTZyWk5zUDVMUlhJTDhsaWdjTndrdFZUaXZ1ZTN0OU1KZ2pIaFhCcFJiYkFEZz09Cg==",
+      "url": "https://github.com/itxve/tauri-live2d/releases/download/v3.0.5/live2d_3.0.5_amd64.AppImage.tar.gz"
+    },
+    "darwin": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTZ09tNzZYREsrR1MvYTdGQ2liZldWQjNkL3JRaDBqUkEwd1VGbi8rTmFCNlpIeCtzWUxZOXpEeCtPOXhxclVqZUJlTXBWWXJoQVk2Y0hrRExVZGFYSmJUcjRPYkk4dVFrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzEyMTM0MTU4CWZpbGU6bGl2ZTJkLmFwcC50YXIuZ3oKamovSDNnQW1XTG9qTENuRDJreERId01KLzJHTE8xTlJ4eXdJUTFDZ3FxdkNGRER5ZXRSVEh3RTEzL2JPUHNPL2RGWDZXR3NRN1NpaE9iSk91OHU3Q1E9PQo=",
+      "url": "https://github.com/itxve/tauri-live2d/releases/download/v3.0.5/live2d.app.tar.gz"
+    },
+    "darwin-aarch64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTZ09tNzZYREsrR1MvYTdGQ2liZldWQjNkL3JRaDBqUkEwd1VGbi8rTmFCNlpIeCtzWUxZOXpEeCtPOXhxclVqZUJlTXBWWXJoQVk2Y0hrRExVZGFYSmJUcjRPYkk4dVFrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzEyMTM0MTU4CWZpbGU6bGl2ZTJkLmFwcC50YXIuZ3oKamovSDNnQW1XTG9qTENuRDJreERId01KLzJHTE8xTlJ4eXdJUTFDZ3FxdkNGRER5ZXRSVEh3RTEzL2JPUHNPL2RGWDZXR3NRN1NpaE9iSk91OHU3Q1E9PQo=",
+      "url": "https://github.com/itxve/tauri-live2d/releases/download/v3.0.5/live2d.app.tar.gz"
+    },
+    "darwin-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTZ09tNzZYREsrR1MvYTdGQ2liZldWQjNkL3JRaDBqUkEwd1VGbi8rTmFCNlpIeCtzWUxZOXpEeCtPOXhxclVqZUJlTXBWWXJoQVk2Y0hrRExVZGFYSmJUcjRPYkk4dVFrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzEyMTM0MTU4CWZpbGU6bGl2ZTJkLmFwcC50YXIuZ3oKamovSDNnQW1XTG9qTENuRDJreERId01KLzJHTE8xTlJ4eXdJUTFDZ3FxdkNGRER5ZXRSVEh3RTEzL2JPUHNPL2RGWDZXR3NRN1NpaE9iSk91OHU3Q1E9PQo=",
+      "url": "https://github.com/itxve/tauri-live2d/releases/download/v3.0.5/live2d.app.tar.gz"
+    },
+    "linux-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTZ09tNzZYREsrR2Y3MzZTV1dVVEtXTnRVNE5PM2s0K0ZPY1FtM0tiSkIxUjFiSVdpTVFqbXZvbUNvT2JUekFtMTBvMUhodEcxdUdXcWVsZ0FtRnliRm5Jc1RlVUlzdlFBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzEyMTM0MTU4CWZpbGU6bGl2ZTJkXzMuMC41X2FtZDY0LkFwcEltYWdlLnRhci5negpETllES1lhUEtFVXYrNW05Zkd1a3FKZXQ2K3BTd2JkYW9aTEg0STE4QTZyWk5zUDVMUlhJTDhsaWdjTndrdFZUaXZ1ZTN0OU1KZ2pIaFhCcFJiYkFEZz09Cg==",
+      "url": "https://github.com/itxve/tauri-live2d/releases/download/v3.0.5/live2d_3.0.5_amd64.AppImage.tar.gz"
+    },
+    "windows-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTZ09tNzZYREsrR2UycEFpSEkrZHBYcVNVeU5GYmdyZEUyMldGTzZWRzVzMGpzemgrcHJCdk8wUHVJR3NibHFBbmtKQUttUTZ6VW5kSTh1azFIR0V4Z2MzK2UvMXlFY0FjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzEyMTM0MjgwCWZpbGU6bGl2ZTJkXzMuMC41X3g2NF9lbi1VUy5tc2kuemlwCnhLR29NMlAvbXR2eGhQWFV3ZHYwalZ3bjRqTERuMURISHBlUzFNVDRBRG53QmdLQnJacEcvY25SSUwrWnp3aXB6c1NYVlloYzhIcnhhN2ZDUzRJUkJBPT0K",
+      "url": "https://github.com/itxve/tauri-live2d/releases/download/v3.0.5/live2d_3.0.5_x64_en-US.msi.zip"
+    }
+  }
+}
