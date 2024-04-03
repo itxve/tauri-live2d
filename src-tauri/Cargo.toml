@@ -24,8 +24,6 @@ serde_json = "1.0"
 tauri = {version = "1.2.3", features = ["api-all", "macos-private-api", "system-tray", "updater"] }
 thiserror = "1.0"
 tokio = {version = "1.23.0", features = ["macros"] }
-tower = {version = "0.4", features = ["util"] }
-tower-http = {version = "0.3.0", features = ["fs", "trace", "cors"] }
 web_server= {path = "./web_server"}
 
 [features]
