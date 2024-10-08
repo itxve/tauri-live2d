@@ -61,6 +61,9 @@ Live2DViewerEX
 
 Model 资源： [zenghongtu/live2d-model-assets](https://github.com/zenghongtu/live2d-model-assets)
 
+[模型下载](https://github.com/itxve/tauri-live2d/issues/2)
+
+
 # 免责声明
 
 ### 该软件仅用于个人学习使用
